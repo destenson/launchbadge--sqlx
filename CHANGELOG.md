@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.9.0-alpha.1 - 2025-05-19
+## 0.9.0-alpha.1 - 2025-06-30
 
 Accumulated changes since the beginning of the alpha cycle. Effectively a draft CHANGELOG for the 0.9.0 release.
 
@@ -42,6 +42,29 @@ This section will be replaced in subsequent alpha releases. See the Git history 
   * **Breaking changes**:
     * Significant changes to the `Migrate` trait
     * `sqlx::migrate::resolve_blocking()` is now `#[doc(hidden)]` and thus SemVer-exempt.
+* [[#3800]]: Escape PostgreSQL Options [[@V02460]]
+  * Breaking behavior change: options passed to `PgConnectOptions::options()` are now automatically escaped.
+    Manual escaping of options is no longer necessary and may cause incorrect behavior.
+* [[#3486]]: fix(logs): Correct spelling of aquired_after_secs tracing field [[@iamjpotts]]
+  * Breaking behavior change: implementations parsing `tracing` logs from SQLx will need to update the spelling.
+* [[#3674]]: Implement `Decode`, `Encode` and `Type` for `Box`, `Arc`, `Cow` and `Rc` [[@joeydewaal]]
+  * Breaking change: `impl Decode for Cow` now always decodes `Cow::Owned`, lifetime is unlinked
+  * See this discussion for motivation: https://github.com/launchbadge/sqlx/pull/3674#discussion_r2008611502
+* [[#3613]]: fix: `RawSql` lifetime issues [[@abonander]]
+  * Breaking change: adds `DB` type parameter to all methods of `RawSql`
+* [[#3526]]: Return &mut Self from the migrator set_ methods [[@nipunn1313]]
+  * Minor breaking change: `Migrator::set_ignore_missing` and `set_locking` now return `&mut Self` instead of `&Self`
+    which may break code in rare circumstances.
+* [[#3541]]: Postgres: force generic plan for better nullability inference. [[@joeydewaal]]
+  * Breaking change: may alter the output of the `query!()` macros for certain queries in Postgres.
+
+# Added
+
+# Changed
+* [[#3867]]: sqlx-postgres: Bump etcetera to 0.10.0 [[@miniduikboot]]
+
+# Fixed
+* [[#3910]]: feat(ok): add correct handling of ok packets in MYSQL implementation [[@0xfourzerofour]]
 
 [seaorm-2600]: https://github.com/SeaQL/sea-orm/issues/2600
 [feature unification]: https://doc.rust-lang.org/cargo/reference/features.html#feature-unification
@@ -49,6 +72,14 @@ This section will be replaced in subsequent alpha releases. See the Git history 
 
 [#3821]: https://github.com/launchbadge/sqlx/pull/3821
 [#3383]: https://github.com/launchbadge/sqlx/pull/3383
+[#3486]: https://github.com/launchbadge/sqlx/pull/3486
+[#3526]: https://github.com/launchbadge/sqlx/pull/3526
+[#3541]: https://github.com/launchbadge/sqlx/pull/3541
+[#3613]: https://github.com/launchbadge/sqlx/pull/3613
+[#3674]: https://github.com/launchbadge/sqlx/pull/3674
+[#3800]: https://github.com/launchbadge/sqlx/pull/3800
+[#3867]: https://github.com/launchbadge/sqlx/pull/3867
+[#3910]: https://github.com/launchbadge/sqlx/pull/3910
 
 ## 0.8.6 - 2025-05-19
 
@@ -2951,3 +2982,7 @@ Fix docs.rs build by enabling a runtime feature in the docs.rs metadata in `Carg
 [@dyc3]: https://github.com/dyc3
 [@ThomWright]: https://github.com/ThomWright
 [@duhby]: https://github.com/duhby
+[@V02460]: https://github.com/V02460
+[@nipunn1313]: https://github.com/nipunn1313
+[@miniduikboot]: https://github.com/miniduikboot
+[@0xfourzerofour]: https://github.com/0xfourzerofour
